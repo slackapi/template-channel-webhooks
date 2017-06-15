@@ -40,7 +40,13 @@ const findOrCreate = (channelId) => {
   // save channel if one isn't found
   if (!channel) {
     const nonce = generateNonce();
-    const message = { text: `New webhook created: ${process.env.BASE_URL}/incoming/${nonce}` };
+    const message = {
+      text: `Webhook created for <#${channelId}>:`,
+      attachments: [{
+        text: `${process.env.BASE_URL}/incoming/${nonce}`,
+        color: '#7e1cc9',
+      }],
+    };
     DB.push(`/${channelId}`, nonce);
 
     // let the channel know about the webhook URL
