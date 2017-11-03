@@ -49,7 +49,7 @@ const findOrCreate = (channelId) => {
   const message = {
     text: `Webhook created for this channel!`,
     attachments: [{
-      text: `${process.env.BASE_URL}/incoming/${nonce}`,
+      text: `${process.env.BASE_URL}:${process.env.PORT}/incoming/${nonce}`,
       color: '#7e1cc9',
     }],
   };
