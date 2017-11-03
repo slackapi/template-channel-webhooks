@@ -1,1 +1,3 @@
 channels.json
+.env
+node_modules

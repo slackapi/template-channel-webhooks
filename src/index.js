@@ -60,7 +60,7 @@ app.post('/events', (req, res) => {
       if (req.body.token === process.env.SLACK_VERIFICATION_TOKEN) {
         const event = req.body.event;
         // handle member_joined_channel event that's emitted when the bot joins a channel
-        if (event.user === app.botId && event.type === 'member_joined_channel') {
+        if (event.inviter === app.botId && event.type === 'member_joined_channel') {
           // find or create nonce for the channel
           channel.findOrCreate(event.channel);
         }
@@ -82,7 +82,7 @@ const getBotUserID = () =>
     const authTest = axios.post('https://slack.com/api/auth.test', qs.stringify(body));
 
     authTest.then((result) => {
-      console.log(result.data.user_id);
+      console.log('Bot Id:' + result.data.user_id);
       resolve(result.data.user_id);
     });
   });
