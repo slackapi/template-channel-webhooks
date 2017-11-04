@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({path: __dirname + '/../.env'});
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -82,7 +82,7 @@ const getBotUserID = () =>
     const authTest = axios.post('https://slack.com/api/auth.test', qs.stringify(body));
 
     authTest.then((result) => {
-      console.log(result.data.user_id);
+      console.log('Bot Id:' + result.data.user_id);
       resolve(result.data.user_id);
     });
   });

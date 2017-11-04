@@ -39,19 +39,23 @@ const findOrCreate = (channelId) => {
 
   // save channel if one isn't found
   if (!channel) {
-    const nonce = generateNonce();
-    const message = {
-      text: `Webhook created for <#${channelId}>:`,
-      attachments: [{
-        text: `${process.env.BASE_URL}/incoming/${nonce}`,
-        color: '#7e1cc9',
-      }],
-    };
+    var nonce = generateNonce();
     DB.push(`/${channelId}`, nonce);
-
-    // let the channel know about the webhook URL
-    sendNotification(message, channelId);
+    console.log('Nonce ' + nonce + ' added for channel ' + channelId);
+  } else {
+    var nonce = channel;
   }
+
+  const message = {
+    text: `Webhook created for this channel!`,
+    attachments: [{
+      text: `${process.env.BASE_URL}/incoming/${nonce}`,
+      color: '#7e1cc9',
+    }],
+  };
+
+  // let the channel know about the webhook URL
+  sendNotification(message, channelId);
 };
 
 const findByNonce = (nonce) => {
