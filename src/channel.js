@@ -18,6 +18,15 @@ const sendNotification = (messageJSON, channelId) => {
     channel: channelId,
   };
 
+  if (messageJSON.fields) {
+    if (!messageJSON.attachments) {
+      messageJSON.attachments = [];
+    }
+
+    messageJSON.attachments.push({fields: messageJSON.fields});
+    delete messageJSON.fields;
+  }
+
   // overwrite or add in the token and channel
   const body = Object.assign({}, messageJSON, bodyVars);
   if (messageJSON.attachments) {
@@ -49,7 +58,7 @@ const findOrCreate = (channelId) => {
   const message = {
     text: `Webhook created for this channel!`,
     attachments: [{
-      text: `${process.env.BASE_URL}:${process.env.PORT}/incoming/${nonce}`,
+      text: `${process.env.BASE_URL}/incoming/${nonce}`,
       color: '#7e1cc9',
     }],
   };
