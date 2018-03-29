@@ -2,7 +2,7 @@ const JsonDB = require('node-json-db');
 const qs = require('querystring');
 const axios = require('axios');
 
-const DB = new JsonDB('channels', true, false);
+const DB = new JsonDB(__dirname + '/../channels', true, false);
 
 // generate a unique number based on the current DateTime and a random number
 const generateNonce = () => `${+new Date()}${Math.floor((Math.random() * 100) + 1)}`;
