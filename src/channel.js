@@ -36,6 +36,7 @@ const sendNotification = (messageJSON, channelId) => {
   const sendMessage = axios.post('https://slack.com/api/chat.postMessage',
     qs.stringify(body));
 
+  console.log(body);
   sendMessage.then(logResult);
 };
 
