@@ -2,7 +2,7 @@ const JsonDB = require('node-json-db');
 const qs = require('querystring');
 const axios = require('axios');
 
-const DB = new JsonDB('channels', true, false);
+const DB = new JsonDB(__dirname + '/../channels', true, false);
 
 // generate a unique number based on the current DateTime and a random number
 const generateNonce = () => `${+new Date()}${Math.floor((Math.random() * 100) + 1)}`;
@@ -18,6 +18,15 @@ const sendNotification = (messageJSON, channelId) => {
     channel: channelId,
   };
 
+  if (messageJSON.fields) {
+    if (!messageJSON.attachments) {
+      messageJSON.attachments = [];
+    }
+
+    messageJSON.attachments.push({fields: messageJSON.fields});
+    delete messageJSON.fields;
+  }
+
   // overwrite or add in the token and channel
   const body = Object.assign({}, messageJSON, bodyVars);
   if (messageJSON.attachments) {
@@ -27,6 +36,7 @@ const sendNotification = (messageJSON, channelId) => {
   const sendMessage = axios.post('https://slack.com/api/chat.postMessage',
     qs.stringify(body));
 
+  console.log(body);
   sendMessage.then(logResult);
 };
 
@@ -39,19 +49,23 @@ const findOrCreate = (channelId) => {
 
   // save channel if one isn't found
   if (!channel) {
-    const nonce = generateNonce();
-    const message = {
-      text: `Webhook created for <#${channelId}>:`,
-      attachments: [{
-        text: `${process.env.BASE_URL}/incoming/${nonce}`,
-        color: '#7e1cc9',
-      }],
-    };
+    var nonce = generateNonce();
     DB.push(`/${channelId}`, nonce);
-
-    // let the channel know about the webhook URL
-    sendNotification(message, channelId);
+    console.log('Nonce ' + nonce + ' added for channel ' + channelId);
+  } else {
+    var nonce = channel;
   }
+
+  const message = {
+    text: `Webhook created for this channel!`,
+    attachments: [{
+      text: `${process.env.BASE_URL}/incoming/${nonce}`,
+      color: '#7e1cc9',
+    }],
+  };
+
+  // let the channel know about the webhook URL
+  sendNotification(message, channelId);
 };
 
 const findByNonce = (nonce) => {
