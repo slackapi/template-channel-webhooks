@@ -22,6 +22,13 @@ app.get('/', (req, res) => {
 
 
 /*
+ * Endpoint for testing that the app is running
+ */
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
+/*
  * Endpoint for the app to receive messages.
  * POST requests to this endpoint must have a nonce in the URL that matches
  * the nonce associated with a channel in the datastore.
